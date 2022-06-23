@@ -25,10 +25,24 @@ function HomeScreen() {
   const navigation = useNavigation<RouteScreenProp>();
   const contactState = useAppSelector(state => state.contact);
   const [search, setSearch] = useState<string>('');
+  const [isFetching, setIsFetching] = useState<boolean>(false);
 
   useEffect(() => {
     distpatch(contactAction.getContactList());
   }, []);
+
+  const handleRefresh = () => {
+    setIsFetching(true);
+    distpatch(
+      contactAction.getContactList(res => {
+        if (res) {
+          setIsFetching(false);
+        } else {
+          setIsFetching(false);
+        }
+      }),
+    );
+  };
 
   const handleGetDetail = (id: string) => {
     distpatch(
@@ -204,6 +218,9 @@ function HomeScreen() {
           </View>
           <View>
             <SwipeListView
+              showsVerticalScrollIndicator={false}
+              onRefresh={() => handleRefresh()}
+              refreshing={isFetching}
               style={{
                 marginTop: 6,
                 height: '100%',

@@ -7,7 +7,15 @@
     "ios": "react-native run-ios",
     "start": "react-native start",
     "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "build:android": "cd android && ./gradlew assembleRelease",
+    "install-all": "yarn install && yarn pod",
+    "pod": "cd ios && pod install && cd ..",
+    "clean": "yarn clean-ios && yarn clean-android && yarn clean-node && watchman watch-del-all && rm -rf /tmp/metro-*",
+    "clean-android": "rm -rf android/.gradle android/.idea android/build android/app/build",
+    "clean-ios": "cd ios && pod deintegrate && cd .. && pod cache clean --all && rm -rf ios/build ios/Podfile.lock",
+    "clean-node": "rm -rf node_modules yarn.lock",
+    "clean-npm": "npm cache clean --force"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.17.6",
