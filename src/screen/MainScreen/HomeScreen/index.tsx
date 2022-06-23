@@ -12,6 +12,7 @@ import {
   View,
 } from 'react-native';
 import {SwipeListView} from 'react-native-swipe-list-view';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 import {MaterialIcon, Text} from '../../../Component';
 import {Fonts} from '../../../constant';
@@ -29,9 +30,23 @@ function HomeScreen() {
     distpatch(contactAction.getContactList());
   }, []);
 
+  const handleGetDetail = (id: string) => {
+    distpatch(
+      contactAction.getContactDetail(id, res => {
+        if (res) {
+          navigation.navigate('ModalContact', {
+            editMode: true,
+          });
+        }
+      }),
+    );
+  };
+
   const renderItem = ({item}: {item: any}) => {
     return (
       <TouchableHighlight
+        underlayColor="#DDDDDD"
+        onPress={() => handleGetDetail(item.id)}
         style={{
           // marginTop: 8,
           paddingVertical: 12,
@@ -73,6 +88,7 @@ function HomeScreen() {
                   fontSize: 18,
                 }}>
                 {item.firstName[0]}
+                {item.lastName[0]}
               </Text>
             </View>
           )}
@@ -108,7 +124,13 @@ function HomeScreen() {
           if (rowMap[rowKey]) {
             rowMap[rowKey].closeRow();
           }
-          Alert.alert('Behasil Menhapus Contact');
+          distpatch(
+            contactAction.getContactList(ress => {
+              if (ress) {
+                Alert.alert('Behasil Menhapus Contact');
+              }
+            }),
+          );
         }
       }),
     );
@@ -122,6 +144,7 @@ function HomeScreen() {
           flex: 1,
           backgroundColor: 'white',
         }}>
+        <Spinner visible={contactState.loading_contact} />
         <View
           style={{
             paddingVertical: 24,

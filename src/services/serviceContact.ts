@@ -26,3 +26,21 @@ export const serviceDeleteContact = async (id: string) => {
     return Promise.reject(error);
   }
 };
+
+export const serviceAddContact = async (payload: object) => {
+  try {
+    const apiFetch = await API.post('/contact', payload);
+    return Promise.resolve(apiFetch);
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};
+
+export const serviceEditContact = async (id: string, payload: object) => {
+  try {
+    const apiFetch = await API.put(`/contact/${id}`, payload);
+    return Promise.resolve(apiFetch);
+  } catch (error) {
+    return Promise.reject(error);
+  }
+};

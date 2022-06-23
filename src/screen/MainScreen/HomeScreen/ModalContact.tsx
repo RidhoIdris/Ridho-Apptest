@@ -1,15 +1,81 @@
-import React from 'react';
-import {TouchableOpacity, View} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, {useEffect} from 'react';
+import {Alert, TouchableOpacity, View} from 'react-native';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import * as yup from 'yup';
+import {useFormik} from 'formik';
+
 import {RouteScreenProp} from '../../../type';
 import {Fonts} from '../../../constant';
-import {Text, TextInput} from '../../../Component';
+import {DismissKeyboardView, Text, TextInput} from '../../../Component';
+import {useAppDispatch, useAppSelector} from '../../../helper';
+import contactAction from '../../../store/Contact/contact.action';
+
+const schema = yup.object().shape({
+  firstName: yup.string().required().label('First Name'),
+  lastName: yup.string().required().label('Last Name'),
+  age: yup.number().required().label('Age'),
+});
 
 const ModalContact = () => {
+  const distpatch = useAppDispatch();
   const navigation = useNavigation<RouteScreenProp>();
+  const route = useRoute<any>();
+  const detailState = useAppSelector(state => state.contact.contact_detail);
 
+  const formik = useFormik({
+    initialValues: {
+      firstName: '',
+      lastName: '',
+      age: '',
+      photo: 'N/A',
+    },
+    validationSchema: schema,
+    onSubmit: payload => {
+      if (route.params?.editMode) {
+        distpatch(
+          contactAction.editContactList(detailState.id, payload, ress => {
+            if (ress) {
+              distpatch(
+                contactAction.getContactList(resss => {
+                  if (resss) {
+                    Alert.alert('Berhasil mengubah contact');
+                    navigation.goBack();
+                  }
+                }),
+              );
+            }
+          }),
+        );
+      } else {
+        distpatch(
+          contactAction.addContactList(payload, ress => {
+            if (ress) {
+              distpatch(
+                contactAction.getContactList(resss => {
+                  if (resss) {
+                    Alert.alert('Berhasil menambahkan contact');
+                    navigation.goBack();
+                  }
+                }),
+              );
+            }
+          }),
+        );
+      }
+    },
+  });
+
+  useEffect(() => {
+    if (route.params?.editMode) {
+      // console.log('detailState ==> ', detailState);
+      formik.setFieldValue('firstName', detailState.firstName);
+      formik.setFieldValue('lastName', detailState.lastName);
+      formik.setFieldValue('age', detailState.age.toString());
+    }
+  }, []);
   return (
-    <View
+    <DismissKeyboardView
       style={{
         flex: 1,
         backgroundColor: 'white',
@@ -36,7 +102,8 @@ const ModalContact = () => {
               color: 'white',
               fontSize: 48,
             }}>
-            J
+            {formik.values.firstName[0]}
+            {formik.values.lastName[0]}
           </Text>
         </View>
         <Text
@@ -45,20 +112,38 @@ const ModalContact = () => {
             fontSize: 24,
             marginTop: 8,
           }}>
-          Jhon Doe
+          {formik.values.firstName} {formik.values.lastName}
         </Text>
-        <Text>121 years old</Text>
+        <Text>{formik.values.age && formik.values.age + ' years old'}</Text>
       </View>
       <View
         style={{
           marginTop: 24,
           paddingHorizontal: 24,
         }}>
-        <TextInput placeholder="First Name" />
-        <TextInput placeholder="Last Name" />
-        <TextInput placeholder="Age" />
+        {/* <form onSubmit={formik.handleSubmit}> */}
+        <TextInput
+          isNoSpace
+          placeholder="First Name"
+          name="firstName"
+          formik={formik}
+        />
+        <TextInput
+          isNoSpace
+          placeholder="Last Name"
+          name="lastName"
+          formik={formik}
+        />
+        <TextInput
+          keyboardType="numeric"
+          placeholder="Age"
+          name="age"
+          isNumber
+          formik={formik}
+        />
         <TouchableOpacity
           activeOpacity={0.7}
+          onPress={() => formik.handleSubmit()}
           style={{
             backgroundColor: '#666AF6',
             paddingVertical: 14,
@@ -73,7 +158,7 @@ const ModalContact = () => {
               color: 'white',
               fontSize: 18,
             }}>
-            Save
+            {route.params?.editMode ? 'Update' : 'Save'}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
@@ -96,8 +181,9 @@ const ModalContact = () => {
             Cancel
           </Text>
         </TouchableOpacity>
+        {/* </form> */}
       </View>
-    </View>
+    </DismissKeyboardView>
   );
 };
 
