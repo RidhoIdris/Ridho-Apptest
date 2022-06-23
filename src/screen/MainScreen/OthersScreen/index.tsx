@@ -1,21 +1,14 @@
-import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
-import {CompositeNavigationProp, useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
+import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {View, Text, Button} from 'react-native';
-import {RootStackParamList} from '../../RootStackPrams';
-import {MainBottomTabParamList} from '../mainBottomTabParams';
+import {RouteScreenProp} from '../../../type';
 
-type RouteScreenProp = CompositeNavigationProp<
-  StackNavigationProp<RootStackParamList>,
-  BottomTabNavigationProp<MainBottomTabParamList>
->;
 function OthersScreen() {
   const navigation = useNavigation<RouteScreenProp>();
 
   return (
     <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Details Screen</Text>
+      <Text>Settings Screen</Text>
       <Button title="Logout" onPress={() => navigation.navigate('Auth')} />
     </View>
   );

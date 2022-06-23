@@ -1,4 +1,5 @@
 import Text from './Text';
+import TextInput from './TextInput';
 import {MaterialIcon} from './Icon';
 
-export {Text, MaterialIcon};
+export {Text, MaterialIcon, TextInput};

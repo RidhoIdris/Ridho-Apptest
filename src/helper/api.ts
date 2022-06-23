@@ -4,22 +4,25 @@ const axiosAPI = axios.create({
   baseURL: 'https://simple-contact-crud.herokuapp.com',
 });
 
-const apiRequest = (method: any, url: string, request: object) => {
+const apiRequest = (method: any, url: string, request?: object) => {
   return axiosAPI({
+    headers: {
+      'Content-type': 'Application/json',
+      Accept: 'Application/json',
+    },
     method,
     url,
-    data: request,
+    data: request ?? undefined,
   })
     .then(res => Promise.resolve(res))
     .catch(err => Promise.reject(err));
 };
 
 // function to execute the http get request
-const get = (url: string, request: object) => apiRequest('get', url, request);
+const get = (url: string) => apiRequest('get', url);
 
 // function to execute the http delete request
-const deleteRequest = (url: string, request: object) =>
-  apiRequest('delete', url, request);
+const deleteRequest = (url: string) => apiRequest('delete', url);
 
 // function to execute the http post request
 const post = (url: string, request: object) => apiRequest('post', url, request);

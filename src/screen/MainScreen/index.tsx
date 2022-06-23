@@ -11,24 +11,27 @@ function MainScreen() {
   return (
     <BottomTab.Navigator
       screenOptions={{
+        tabBarActiveTintColor: '#666AF6',
         headerShown: false,
         tabBarStyle: {
           paddingTop: 5,
         },
       }}>
       <BottomTab.Screen
-        name="Home"
+        name="Contacts"
         options={{
-          tabBarLabel: 'Home',
+          title: 'Contacts',
+          tabBarLabel: 'Contacts',
           tabBarIcon: ({color}) => (
-            <MaterialIcon name="home" color={color} size={'extraLarge'} />
+            <MaterialIcon name="account" color={color} size={'extraLarge'} />
           ),
         }}
         component={HomeScreen}
       />
       <BottomTab.Screen
-        name="Others"
+        name="Settings"
         options={{
+          title: 'Settings',
           tabBarLabel: 'Settings',
           tabBarIcon: ({color}) => (
             <MaterialIcon name="cog" color={color} size={'extraLarge'} />
