@@ -216,40 +216,39 @@ function HomeScreen() {
               }}
             />
           </View>
-          <View>
-            <SwipeListView
-              showsVerticalScrollIndicator={false}
-              onRefresh={() => handleRefresh()}
-              refreshing={isFetching}
-              style={{
-                marginTop: 6,
-                height: '100%',
-              }}
-              data={contactState.contact_list.filter((item: any) => {
-                return (
-                  !item.firstName.search(search) ||
-                  !item.lastName.search(search)
-                );
-              })}
-              renderItem={item => renderItem(item)}
-              keyExtractor={(item: any) => item.id}
-              renderHiddenItem={(data: any, rowMap: any) => (
-                <View style={styles.rowBack}>
-                  <TouchableOpacity
-                    onPress={() => deleteContact(rowMap, data.item.id)}
-                    style={styles.backRightBtn}>
-                    <MaterialIcon
-                      color="white"
-                      size="extraLarge"
-                      name="delete-outline"
-                    />
-                  </TouchableOpacity>
-                </View>
-              )}
-              rightOpenValue={-75}
-            />
-          </View>
+          {/* <View> */}
+          <SwipeListView
+            showsVerticalScrollIndicator={false}
+            onRefresh={() => handleRefresh()}
+            refreshing={isFetching}
+            style={{
+              marginTop: 6,
+              // height: '100%',
+            }}
+            data={contactState.contact_list.filter((item: any) => {
+              return (
+                !item.firstName.search(search) || !item.lastName.search(search)
+              );
+            })}
+            renderItem={item => renderItem(item)}
+            keyExtractor={(item: any) => item.id}
+            renderHiddenItem={(data: any, rowMap: any) => (
+              <View style={styles.rowBack}>
+                <TouchableOpacity
+                  onPress={() => deleteContact(rowMap, data.item.id)}
+                  style={styles.backRightBtn}>
+                  <MaterialIcon
+                    color="white"
+                    size="extraLarge"
+                    name="delete-outline"
+                  />
+                </TouchableOpacity>
+              </View>
+            )}
+            rightOpenValue={-75}
+          />
         </View>
+        {/* </View> */}
       </SafeAreaView>
     </Fragment>
   );
